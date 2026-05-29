@@ -1,8 +1,10 @@
 // ===================================================================
 //  CONFIGURAÇÕES
 // ===================================================================
-const USER_AGENT = 'MeuAppDeRotas/1.0 (angelo@example.com)';
-const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+// Photon (Komoot) — geocodificador gratuito, sem chave de API e sem bloqueio de CORS
+const PHOTON_URL = 'https://photon.komoot.io/api';
+// Bounding box aproximada do Brasil: minLon, minLat, maxLon, maxLat
+const BRAZIL_BBOX = '-73.99,-33.75,-28.85,5.27';
 
 // ===================================================================
 //  UTILITÁRIOS
@@ -258,21 +260,37 @@ function setStatus(msg, isError = false, isLoading = false) {
     el.style.display = msg ? 'block' : 'none';
 }
 
+// Formata o nome de exibição a partir de uma feature do Photon
+function formatPhotonName(feature) {
+    const p = feature.properties;
+    const parts = [];
+    if (p.name)     parts.push(p.name);
+    if (p.street)   parts.push(p.street);
+    if (p.city)     parts.push(p.city);
+    if (p.state)    parts.push(p.state);
+    if (p.country)  parts.push(p.country);
+    return parts.filter(Boolean).join(', ');
+}
+
+// Geocodificação via Photon (Komoot) — CORS-friendly, gratuito, sem API key
 async function nominatimSearch(query, limit = 5) {
     const params = new URLSearchParams({
         q: query,
-        format: 'json',
-        addressdetails: 1,
         limit,
-        countrycodes: 'br'
+        lang: 'pt',
+        bbox: BRAZIL_BBOX
     });
     try {
-        const res = await fetch(`${NOMINATIM_URL}?${params}`, {
-            headers: { 'User-Agent': USER_AGENT }
-        });
-        return await res.json();
+        const res = await fetch(`${PHOTON_URL}?${params}`);
+        const data = await res.json();
+        // Normaliza para o formato { display_name, lat, lon } usado no restante do código
+        return data.features.map(f => ({
+            display_name: formatPhotonName(f),
+            lat:  f.geometry.coordinates[1].toString(),
+            lon:  f.geometry.coordinates[0].toString()
+        }));
     } catch (err) {
-        console.error('Nominatim error:', err);
+        console.error('Photon geocoding error:', err);
         return [];
     }
 }
