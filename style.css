@@ -1,0 +1,250 @@
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0F172A; /* Cor de fundo principal do dark theme */
+    color: #E2E8F0; /* Cor do texto padrão */
+    overflow: hidden; /* Evita scrollbar indesejada */
+}
+
+/* Container do Mapa */
+#map {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Garante que o mapa fique abaixo do painel */
+}
+
+/* Painel Lateral */
+.sidebar-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 350px; /* Largura padrão */
+    max-height: calc(100vh - 40px); /* Altura máxima */
+    background: rgba(30, 41, 59, 0.7); /* Fundo translúcido */
+    backdrop-filter: blur(10px); /* Efeito glassmorphism */
+    border: 1px solid rgba(71, 85, 105, 0.3); /* Borda sutil */
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    z-index: 1000; /* Acima do mapa */
+    overflow-y: auto; /* Scroll para conteúdo que excede a altura */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar-panel h1, .sidebar-panel h2 {
+    color: #93C5FD; /* Um azul claro para títulos */
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.sidebar-panel h3 {
+    color: #A78BFA; /* Um roxo suave, apenas para este subtítulo, mas vou mudar para evitar roxos */
+    color: #60A5FA; /* Azul mais neutro */
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* Inputs e Grupos de Input */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #CBD5E1;
+    font-weight: 500;
+}
+
+.location-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    background-color: rgba(15, 23, 42, 0.8);
+    color: #F8FAFC;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.location-input:focus {
+    border-color: #38BDF8; /* Ciano claro */
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+}
+
+/* Estilo para autocomplete suggestions */
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%; /* Abaixo do input */
+    left: 0;
+    right: 0;
+    background-color: rgba(30, 41, 59, 0.95); /* Fundo escuro levemente transparente */
+    border: 1px solid #475569;
+    border-radius: 0 0 8px 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001; /* Acima de outros elementos do painel */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.autocomplete-suggestions li {
+    padding: 10px 12px;
+    cursor: pointer;
+    color: #F8FAFC;
+    transition: background-color 0.2s ease;
+}
+
+.autocomplete-suggestions li:hover {
+    background-color: #1E293B; /* Um pouco mais escuro ao passar o mouse */
+    color: #38BDF8; /* Ciano no hover */
+}
+
+.autocomplete-suggestions li:not(:last-child) {
+    border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+/* Botões */
+.action-button {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #F8FAFC;
+    cursor: pointer;
+    background: linear-gradient(90deg, #06B6D4 0%, #2563EB 100%); /* Degradê Ciano para Azul-Cobalto */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+}
+
+.action-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.6);
+}
+
+/* Camadas do Mapa */
+.map-layers {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #475569;
+}
+
+.layer-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.layer-option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #64748B;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.layer-option input[type="radio"]:checked {
+    border-color: #0EA5E9; /* Azul claro */
+}
+
+.layer-option input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #0EA5E9; /* Azul claro */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.layer-option label {
+    color: #E2E8F0;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+/* Detalhes da Rota */
+.route-info {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #475569;
+    color: #CBD5E1;
+}
+
+.route-info p {
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+#instructions-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#instructions-list li {
+    background-color: rgba(15, 23, 42, 0.6);
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #E2E8F0;
+    border-left: 3px solid #0EA5E9; /* Detalhe em azul */
+}
+
+/* Esconder a tabela de direções nativa do Leaflet Routing Machine */
+.leaflet-routing-container {
+    display: none !important;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .sidebar-panel {
+        width: 90%; /* Ocupa 90% da largura em telas menores */
+        left: 5%;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        padding: 20px;
+    }
+
+    .sidebar-panel h1 {
+        font-size: 1.8rem;
+    }
+
+    .location-input, .action-button {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+}
